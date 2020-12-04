@@ -1,4 +1,4 @@
-class User(){
+class User{
 
     constructor(name, id){
         this.name = name

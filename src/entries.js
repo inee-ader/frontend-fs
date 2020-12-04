@@ -1,4 +1,4 @@
-class Entry(){
+class Entry{
 
     constructor(date, feather, stone, id, user_id){
         this.date = date
