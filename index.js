@@ -3,19 +3,24 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const USERS_URL = 'http://localhost:3000/users'
     const ENTRIES_URL = 'http://localhost:3000/entries'
     let USER
+    let TODAY2
+  
 
     function enterName(){
-        const nameForm = document.getElementById('name-form')
-        nameForm.innerHTML = 
+        const greeting = document.getElementById('greeting')
+        const nameContainer = document.getElementById('name-container')
+        greeting.innerText = ''
+        nameContainer.innerHTML = 
         `
         <div>
-            <form>
-                <label>...your name?</label>
+            <form id="name-form">
+                <label class="lab">...your name?</label>
                 <input type="text" id="name" name="name">
-                <input type="submit" id="enter-btn" value="Enter">
+                <input type="submit" class="butt" id="enter-btn" value="Enter">
             </form>
         </div>
         `
+        const nameForm = document.getElementById('name-form')
         nameForm.addEventListener('submit', (e) => createUser(e))
     }
     enterName()
@@ -24,7 +29,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     function createUser(e){
         e.preventDefault()
         const name = e.target.name.value
-        
+        console.log(`created ${name}`)
         fetch(USERS_URL, {
             method: 'POST', 
             headers: {
@@ -49,18 +54,21 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
         editNameBtn.innerText = 'Edit Name'
         editNameBtn.id = 'edit-name'
+        editNameBtn.className = 'butt'
         editNameBtn.addEventListener('click', (e) => changeName(e))
 
         const deleteSelfBtn = document.createElement('button')
         deleteSelfBtn.innerText = 'Delete Self'
         deleteSelfBtn.id = 'delete-self'
+        deleteSelfBtn.className = 'butt'
         deleteSelfBtn.addEventListener('click', (e) => deleteSelf(e))
 
         footer.append(editNameBtn, deleteSelfBtn)
     }
 
     function deleteSelf(e){
-        const nameForm = document.getElementById('name-form')
+
+        const nameForm = document.getElementById('name-container')
         const formContainer = document.getElementById('form-container')
         const reflectionsContainer = document.getElementById('reflections-container')
         const footer = document.getElementById('footer')
@@ -77,7 +85,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
     }
 
     function changeName(e){
-        const nameForm = document.getElementById('name-form')
+
+        const nameForm = document.getElementById('name-container')
         const formContainer = document.getElementById('form-container')
         formContainer.innerHTML = ''
 
@@ -87,13 +96,16 @@ document.addEventListener('DOMContentLoaded', (e) => {
         const reflectionsContainer = document.getElementById('reflections-container')
         reflectionsContainer.innerHTML = ''
 
+        // nameForm.innerHTML = ''
+        // nameForm.removeEventListener('submit', createUser)
+
         nameForm.innerHTML = 
         `
         <div>
             <form>
-                <label>...change name to?</label>
+                <label class="lab">...change name to?</label>
                 <input type="text" id="name" name="name">
-                <input type="submit" id="enter-btn" value="Save">
+                <input type="submit" class="butt" id="enter-btn" value="Save">
             </form>
         </div>
         `
@@ -101,9 +113,10 @@ document.addEventListener('DOMContentLoaded', (e) => {
     }
 
     function saveName(e){
-
         // creating new user instead of updating the existing one, and logs in as that new user
+        e.preventDefault()
         const name = e.target.name.value
+        console.log(USER.id)
         fetch(USERS_URL + `/${USER.id}`, {
             method: 'PATCH',  
             headers: {
@@ -114,7 +127,10 @@ document.addEventListener('DOMContentLoaded', (e) => {
             })
         })
         .then(res => res.json())
-        .then()
+        .then(userObj => {
+            USER.name = name
+            drawForm()
+        })
     }
 
     // get current date 
@@ -129,7 +145,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
             }if(mm<10){
                 mm=`0${mm}`
             } 
-        TODAY = `${mm}/${dd}/${yyyy}`
+        TODAY = `${mm}.${dd}.${yyyy}`
+        TODAY2 = `${yyyy}-${mm}-${dd}`
         date.innerText = `Today is ${TODAY}`
     }
     theDate() 
@@ -137,8 +154,11 @@ document.addEventListener('DOMContentLoaded', (e) => {
     // journal entry form
     function drawForm(){
 
+        const greeting = document.getElementById('greeting')
+        greeting.innerText = ''
+        greeting.innerText = `Hello, ${USER.name}...`
         const formContainer = document.getElementById('form-container')
-        const nameForm = document.getElementById('name-form')
+        const nameForm = document.getElementById('name-container')
         const reflectionsContainer = document.getElementById('reflections-container')
 
         nameForm.innerHTML = ''
@@ -147,12 +167,15 @@ document.addEventListener('DOMContentLoaded', (e) => {
         formContainer.innerHTML = 
         `
         <form id="entry-form">
-            <input type="date" name="date">
-            <label>...what is your feather?</label>
-            <textarea type="text" id="feather" name="feather" placeholder="What brought you joy?"></textarea>
-            <label>...what is your stone?</label>
-            <textarea type="text" id="stone" name="stone" placeholder="What was the hard part?"></textarea>
-            <input type="submit" id="submit-btn" value="Log">
+            <input value=${TODAY2} type="date" name="date" id="date-input" max="${TODAY2}"><br>
+            
+            <div id="textarea-container">
+                <textarea rows="9" cols="20" class="field" type="text" id="feather" name="feather" placeholder="...what is your feather?"></textarea><br>
+
+                <textarea rows="9" cols="20" class="field" type="text" id="stone" name="stone" placeholder="...what is your stone?"></textarea><br>
+            </div>
+
+            <input type="submit" class="butt" id="submit-btn" value="Log">
         </form>
         `
         const entryForm = document.getElementById('entry-form')
@@ -189,17 +212,19 @@ document.addEventListener('DOMContentLoaded', (e) => {
             let ul = document.getElementById('reflectionsUl')
             let newEntryLi = document.createElement('li')
             newEntryLi.id = entry.id
-            newEntryLi.innerText = entry.date
+            newEntryLi.innerText = `${entry.date}`
             ul.prepend(newEntryLi)
             newEntryLi.addEventListener('click', (e) => showEntry(e))
         })
+        const entryForm = document.getElementById('entry-form')
+        entryForm.reset()
     }
 
     function drawEntriesList(){
         
         const reflectionsContainer = document.getElementById('reflections-container')
         
-        reflectionsContainer.innerHTML - ''
+        reflectionsContainer.innerHTML = ''
         reflectionsContainer.innerHTML = 
         `
         <h3>Past Reflections</h3>
@@ -209,8 +234,9 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
         for(entry of USER.entries){
             let entryLi = document.createElement('li')
-            entryLi.innerText = entry.date
+            entryLi.innerText = `${entry.date}`
             entryLi.id = entry.id
+            entryLi.className = 'li'
             
             ul.prepend(entryLi)
             entryLi.addEventListener('click', (e) => showEntry(e))
@@ -233,6 +259,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             const logBtn = document.getElementById('submit-btn')
             logBtn.hidden = "true"
 
+            entryForm.dataset.entryId = entryId
             entryForm.date.value = entry.date
             entryForm.feather.value = entry.feather
             entryForm.stone.value = entry.stone
@@ -240,28 +267,32 @@ document.addEventListener('DOMContentLoaded', (e) => {
             if(!document.getElementById('save-btn')){
                 const saveBtn = document.createElement('button')
                 saveBtn.id = 'save-btn'
+                saveBtn.className = 'butt'
                 saveBtn.innerText = 'Save'
-                saveBtn.addEventListener('click', (e) => saveEdit(e, entryId))
-    
+                
                 const deleteBtn = document.createElement('button')
                 deleteBtn.id = 'delete-btn'
+                deleteBtn.className = 'butt'
                 deleteBtn.innerText = 'Delete'
-                deleteBtn.addEventListener('click', (e) => deleteEntry(e, entryId))
-    
+                
+                saveBtn.addEventListener('click', (e) => saveEdit(e))
+                deleteBtn.addEventListener('click', (e) => deleteEntry(e))
                 entryForm.append(saveBtn, deleteBtn)
             }
+            
         })
     }
 
-    function saveEdit(e, entryId){
+    function saveEdit(e){
 
-        // not updating on the DOM list
-        console.log(entryId)
         e.preventDefault()
+        const entryId = e.target.parentElement.dataset.entryId
 
         const date = e.target.parentElement.date.value
         const feather = e.target.parentElement.feather.value
         const stone = e.target.parentElement.stone.value
+        const saveBtn = document.getElementById('save-btn')
+        const deleteBtn = document.getElementById('delete-btn')
 
         fetch(ENTRIES_URL + `/${entryId}`, {
             method:'PATCH', 
@@ -279,19 +310,37 @@ document.addEventListener('DOMContentLoaded', (e) => {
         .then((entry) => {
             let ul = document.getElementById('reflectionsUl')
             let li = document.getElementById(entryId)
-            li.innerText = entry.date
+            li.innerText = `${entry.date}`
         })
+        const entryForm = document.getElementById('entry-form')
+        entryForm.reset()
+        saveBtn.remove()
+        deleteBtn.remove()
     }
     
-    function deleteEntry(e, entryId){
-
-        // deletes from the DB, but does not update DOM properly.\
+    function deleteEntry(e){
 
         e.preventDefault()
+        // deletes from the DB, but does not update DOM list properly.
+        const entryId = e.target.parentElement.dataset.entryId
+
         fetch(ENTRIES_URL + `/${entryId}`, {
             method: 'DELETE'
         })
-        .then(drawForm())
+        .then(() => {
+            const li = document.getElementById(entryId)
+            li.remove()
+            const entryForm = document.getElementById('entry-form')
+            entryForm.reset()
+            const saveBtn = document.getElementById('save-btn')
+            saveBtn.className = 'butt'
+            const deleteBtn = document.getElementById('delete-btn')
+            deleteBtn.className = 'butt'
+            saveBtn.remove()
+            deleteBtn.remove()
+            const logBtn = document.getElementById('submit-btn')
+            logBtn.hidden = false             
+        })
     }
 
 
