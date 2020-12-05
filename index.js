@@ -170,9 +170,9 @@ document.addEventListener('DOMContentLoaded', (e) => {
             <input value=${TODAY2} type="date" name="date" id="date-input" max="${TODAY2}"><br>
             
             <div id="textarea-container">
-                <textarea rows="9" cols="20" class="field" type="text" id="feather" name="feather" placeholder="...what is your feather?"></textarea><br>
+                <textarea rows="9" cols="25" class="field" type="text" id="feather" name="feather" placeholder="...what is your feather?"></textarea><br>
 
-                <textarea rows="9" cols="20" class="field" type="text" id="stone" name="stone" placeholder="...what is your stone?"></textarea><br>
+                <textarea rows="9" cols="25" class="field" type="text" id="stone" name="stone" placeholder="...what is your stone?"></textarea><br>
             </div>
 
             <input type="submit" class="butt" id="submit-btn" value="Log">
