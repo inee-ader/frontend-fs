@@ -9,10 +9,17 @@ document.addEventListener('DOMContentLoaded', (e) => {
     function enterName(){
         const greeting = document.getElementById('greeting')
         const nameContainer = document.getElementById('name-container')
+        const formContainer = document.getElementById('form-container')
+        const reflectionsContainer = document.getElementById('reflections-container')
+        const footer = document.getElementById('footer')
+        footer.innerHTML = ''
+        formContainer.innerHTML = ''
         greeting.innerText = ''
+        reflectionsContainer.innerHTML = ''
         nameContainer.innerHTML = 
         `
         <div>
+        <img id="snail-animation" src="assets/snail.png" alt="little snail">
             <form id="name-form">
                 <label class="lab">...your name?</label>
                 <input type="text" id="name" name="name">
@@ -63,7 +70,13 @@ document.addEventListener('DOMContentLoaded', (e) => {
         deleteSelfBtn.className = 'butt'
         deleteSelfBtn.addEventListener('click', (e) => deleteSelf(e))
 
-        footer.append(editNameBtn, deleteSelfBtn)
+        const closeJournal = document.createElement('button')
+        closeJournal.innerText = 'Close Journal'
+        closeJournal.id = 'close-journal'
+        closeJournal.className = 'butt'
+        closeJournal.addEventListener('click', () => enterName())
+
+        footer.append(editNameBtn, deleteSelfBtn, closeJournal)
     }
 
     function deleteSelf(e){
@@ -102,6 +115,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         nameForm.innerHTML = 
         `
         <div>
+        <img id="snail-animation" src="assets/snail.png" alt="little snail">
             <form>
                 <label class="lab">...change name to?</label>
                 <input type="text" id="name" name="name">
@@ -166,6 +180,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
         formContainer.innerHTML = 
         `
+        <img id="snail-animation" src="assets/snail.png" alt="little snail" class="animate__animated animate__delay-2s">
+
         <form id="entry-form">
             <input value=${TODAY2} type="date" name="date" id="date-input" max="${TODAY2}"><br>
             
@@ -227,7 +243,10 @@ document.addEventListener('DOMContentLoaded', (e) => {
         reflectionsContainer.innerHTML = ''
         reflectionsContainer.innerHTML = 
         `
-        <h3>Past Reflections</h3>
+        <div id="btn-div">
+            <button id="clear-form-btn" class="butt">Clear Form</button>
+        </div>
+        <h3 id="past-reflections">Past Reflections</h3>
         `
         const ul = document.createElement('ul')
         ul.id = 'reflectionsUl'
@@ -242,16 +261,16 @@ document.addEventListener('DOMContentLoaded', (e) => {
             entryLi.addEventListener('click', (e) => showEntry(e))
         }
         reflectionsContainer.append(ul)
+        const clearFormBtn = document.getElementById('clear-form-btn')
+        clearFormBtn.addEventListener('click', () => clearForm())
+        
     }
 
     function showEntry(e){
         
         let formContainer = document.getElementById('form-container')
-    
         let entryId = e.target.id
-
-        console.log(entryId)
-
+      
         fetch(ENTRIES_URL + `/${entryId}`)
         .then(res => res.json())
         .then(entry => {
@@ -277,6 +296,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 
                 saveBtn.addEventListener('click', (e) => saveEdit(e))
                 deleteBtn.addEventListener('click', (e) => deleteEntry(e))
+                
                 entryForm.append(saveBtn, deleteBtn)
             }
             
@@ -312,10 +332,13 @@ document.addEventListener('DOMContentLoaded', (e) => {
             let li = document.getElementById(entryId)
             li.innerText = `${entry.date}`
         })
+
         const entryForm = document.getElementById('entry-form')
         entryForm.reset()
         saveBtn.remove()
         deleteBtn.remove()
+        const logBtn = document.getElementById('submit-btn')
+        logBtn.hidden = false
     }
     
     function deleteEntry(e){
@@ -341,6 +364,16 @@ document.addEventListener('DOMContentLoaded', (e) => {
             const logBtn = document.getElementById('submit-btn')
             logBtn.hidden = false             
         })
+    }
+    function clearForm(){
+        const entryForm = document.getElementById('entry-form')
+        entryForm.reset()
+        const saveBtn = document.getElementById('save-btn')
+        saveBtn.remove()
+        const deleteBtn = document.getElementById('delete-btn')
+        deleteBtn.remove()
+        const logBtn = document.getElementById('submit-btn')
+        logBtn.hidden = false  
     }
 
 
