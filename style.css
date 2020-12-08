@@ -1,9 +1,33 @@
 
+html{
+    max-width: 1000px;
+}
 body{
-    background-color: rgb(174, 206, 188);
+    font-family: 'Source Sans Pro', sans-serif; background-color: rgb(155, 199, 172);
     text-align: center;
-    letter-spacing: 4px;
-    font-family: Andale Mono, monospace;
+    letter-spacing: 2px;
+    -webkit-animation: fadein 2s;
+}
+p.foot{
+    font-family: 'Source Sans Pro', sans-serif;   
+    font-size: 20px;
+    letter-spacing: 0px;
+    color: rgb(56, 56, 56);
+}
+p#date{
+    font-family: 'Almendra Display', cursive;
+    color: white;
+    font-size: 22px;
+    margin: 5px;
+}
+p#greeting{
+    text-align: left;
+    font-size: 18px;
+    color: rgb(56, 56, 56);
+}
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 .body{
     margin: 40px;
@@ -17,17 +41,28 @@ body{
     justify-content: center;
     padding-top: 20px;
 }
+input#name{
+    font-family: 'Source Sans Pro', sans-serif;    font-size: 18px;
+    width: 20%;
+    background-color: rgb(226, 245, 197);
+    border: 1px solid white;
+}
 textarea{
-    font-family: Andale Mono, monospace;
+    width: 250px;
+    height: 150px;
+    background-color: rgb(226, 245, 197);
+    font-family: 'Source Sans Pro', sans-serif;    font-size: 15px;   
     resize: none;
     outline: none;
     margin-left: 15px;
     margin-right: 15px;
+    display: inline-block;
+    border-radius: 10px;
+    border: 1px solid white;
 }
 #textarea-container{
     flex-direction: row;
     justify-content: center;
-    border-radius: 5px;
     display: flex;
     padding-bottom: 20px;
 }
@@ -42,10 +77,13 @@ input{
     border: 1px solid black;
 }
 #date-input{
-    border: 1px solid black;
+    font-family: 'Source Sans Pro', sans-serif; 
+    border: 1px solid rgb(255, 255, 255);
+    margin-bottom: 20px;
 }
 .lab{
     padding-top: 20px;
+    color: white;
 }
 #reflections-container{
     justify-content: center;
@@ -57,46 +95,89 @@ input{
     padding-right: 300px;
     padding-left: 300px;
 }
-#date-input{
-    margin-bottom: 20px;
-}
 li{
-    color: black;
+    font-size: 20px;
+    color: rgb(47, 58, 46);
     text-align: center;
 }
-/* mouse over link */
 li:hover{
     color: white;
     cursor: pointer;
 }
 .butt{
+    width: 135px;
+    color: rgb(255, 255, 255);
     transition-duration: 0.3s;
-    border: 1px solid rgb(13, 58, 13);
+    border: 1px solid rgb(255, 255, 255);
     border-radius: 5px;
-    padding: 10px 25px;
-    font-size: 14px;
+    padding: 8px 20px;
+    font-size: 16px;
     margin-bottom: 20px;
     margin: 20px;
-    background-color: white;
-    font-family: Andale Mono, monospace;
+    background-color: rgb(107, 153, 107);
+    font-family: 'Source Sans Pro', sans-serif;
 }
 .butt:hover{
+    color: rgb(88, 112, 79);
+    background-color: rgb(255, 255, 255);
     box-shadow: 0 12px 16px rgb(88, 112, 79), 0 17px 50px 0 rgba(90, 117, 83, 0.19);
 }
-.butt-div{
-    width: 30px;
+.butt#submit-btn{
+    margin-left: 5px;
 }
-#snail-animation{
-    
+.butt-div{
+    width: 25px;
+}
+img#snail-pic{
+    opacity: 80%;
 }
 .animate__animated{
-    --animate-duration: 300s;
+    opacity: 80%;
+    --animate-duration: 300000ms;
     animation-name: glideIn;
 }
 @keyframes glideIn{
     from {margin-right: 70%;}
     to {margin-left: 70%;}
 }
-#past-reflections{
-    
+#save-delete-div{
+    display: flex;
+    justify-content: left;
+}
+#save-div, #delete-div{
+    flex-direction: column;
+    display:flex;
+    margin: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+div#delete-div{
+    position: absolute;
+}
+div#save-div{
+    position: relative;
+    top: -100px;
+}
+h1, p{
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;    
+    margin: 5px;
+}
+h1{
+    font-family: 'Almendra Display', cursive;
+    font-size: 55px;
+    letter-spacing: 8px;
+    margin: 5px;
+}
+h3{
+    font-family: 'Almendra Display', cursive;
+    color: white;
+    font-size: 22px;
+    margin: 5px;
+}
+#clear-form-btn{
+    margin: 5px;
+}
+#edit-name, #close-journal{
+    margin: 5px;
 }

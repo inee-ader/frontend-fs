@@ -1,11 +1,13 @@
+
 document.addEventListener('DOMContentLoaded', (e) => {
 
     const USERS_URL = 'http://localhost:3000/users'
     const ENTRIES_URL = 'http://localhost:3000/entries'
     let USER
+    let TODAY
     let TODAY2
-  
 
+    // entry page
     function enterName(){
         const greeting = document.getElementById('greeting')
         const nameContainer = document.getElementById('name-container')
@@ -19,7 +21,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         nameContainer.innerHTML = 
         `
         <div>
-        <img id="snail-animation" src="assets/snail.png" alt="little snail">
+        <img id="snail-pic" src="assets/snail.png" alt="little snail">
             <form id="name-form">
                 <label class="lab">...your name?</label>
                 <input type="text" id="name" name="name">
@@ -36,7 +38,9 @@ document.addEventListener('DOMContentLoaded', (e) => {
     function createUser(e){
         e.preventDefault()
         const name = e.target.name.value
+
         console.log(`created ${name}`)
+
         fetch(USERS_URL, {
             method: 'POST', 
             headers: {
@@ -50,12 +54,20 @@ document.addEventListener('DOMContentLoaded', (e) => {
         .then(userObj => {
             USER = userObj
             drawForm()
-        }) 
+        })
+        // .then((err) => errorPosting(err))
     }
 
     function drawFooter(){
         const footer = document.getElementById('footer')
         const editNameBtn = document.createElement('button')
+        const featherP = document.createElement('p')
+        featherP.className = 'foot'
+        const stoneP = document.createElement('p')
+        stoneP.className = 'foot'
+
+        featherP.innerText = 'The FEATHER is a pleasant, delightful, or enjoyable part of your day...'
+        stoneP.innerText = 'The STONE is a difficult, uncomfortable, or inconvenient part of your day...'
 
         footer.innerHTML = ''
 
@@ -64,19 +76,13 @@ document.addEventListener('DOMContentLoaded', (e) => {
         editNameBtn.className = 'butt'
         editNameBtn.addEventListener('click', (e) => changeName(e))
 
-        const deleteSelfBtn = document.createElement('button')
-        deleteSelfBtn.innerText = 'Delete Self'
-        deleteSelfBtn.id = 'delete-self'
-        deleteSelfBtn.className = 'butt'
-        deleteSelfBtn.addEventListener('click', (e) => deleteSelf(e))
-
         const closeJournal = document.createElement('button')
         closeJournal.innerText = 'Close Journal'
         closeJournal.id = 'close-journal'
         closeJournal.className = 'butt'
         closeJournal.addEventListener('click', () => enterName())
 
-        footer.append(editNameBtn, deleteSelfBtn, closeJournal)
+        footer.append(editNameBtn, closeJournal, featherP, stoneP)
     }
 
     function deleteSelf(e){
@@ -95,6 +101,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             method: 'DELETE'
         })
         .then(enterName())
+        // .catch((err) => errorPosting(err))
     }
 
     function changeName(e){
@@ -109,9 +116,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
         const reflectionsContainer = document.getElementById('reflections-container')
         reflectionsContainer.innerHTML = ''
 
-        // nameForm.innerHTML = ''
-        // nameForm.removeEventListener('submit', createUser)
-
         nameForm.innerHTML = 
         `
         <div>
@@ -121,13 +125,19 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 <input type="text" id="name" name="name">
                 <input type="submit" class="butt" id="enter-btn" value="Save">
             </form>
+            <div id="delete-btn-div">
+                <button id="delete-self" class="butt">Delete Self</button>
+            </div>
         </div>
         `
+        const deleteSelfBtn = document.getElementById('delete-self')
+        deleteSelfBtn.addEventListener('click', (e) => deleteSelf(e))
+
         nameForm.addEventListener('submit', (e) => saveName(e))
     }
 
     function saveName(e){
-        // creating new user instead of updating the existing one, and logs in as that new user
+      
         e.preventDefault()
         const name = e.target.name.value
         console.log(USER.id)
@@ -145,11 +155,11 @@ document.addEventListener('DOMContentLoaded', (e) => {
             USER.name = name
             drawForm()
         })
+        // .catch((err) => errorPosting(err))
     }
 
     // get current date 
     function theDate(){
-        let date = document.getElementById('date')
         TODAY = new Date()
         let dd = TODAY.getDate()
         let mm = TODAY.getMonth()+1 
@@ -161,39 +171,44 @@ document.addEventListener('DOMContentLoaded', (e) => {
             } 
         TODAY = `${mm}.${dd}.${yyyy}`
         TODAY2 = `${yyyy}-${mm}-${dd}`
-        date.innerText = `Today is ${TODAY}`
     }
-    theDate() 
-     
+    theDate()
+
     // journal entry form
     function drawForm(){
 
         const greeting = document.getElementById('greeting')
         greeting.innerText = ''
         greeting.innerText = `Hello, ${USER.name}...`
-        const formContainer = document.getElementById('form-container')
+
         const nameForm = document.getElementById('name-container')
-        const reflectionsContainer = document.getElementById('reflections-container')
-
         nameForm.innerHTML = ''
+        
+        const formContainer = document.getElementById('form-container')
         formContainer.innerHTML = ''
-
         formContainer.innerHTML = 
         `
         <img id="snail-animation" src="assets/snail.png" alt="little snail" class="animate__animated animate__delay-2s">
 
+        <p id="date"></p>
         <form id="entry-form">
             <input value=${TODAY2} type="date" name="date" id="date-input" max="${TODAY2}"><br>
             
             <div id="textarea-container">
-                <textarea rows="9" cols="25" class="field" type="text" id="feather" name="feather" placeholder="...what is your feather?"></textarea><br>
+                <textarea rows="8" cols="25" class="field" type="text" id="feather" name="feather" placeholder="...what is your FEATHER?"></textarea><br>
 
-                <textarea rows="9" cols="25" class="field" type="text" id="stone" name="stone" placeholder="...what is your stone?"></textarea><br>
+                <textarea rows="8" cols="25" class="field" type="text" id="stone" name="stone" placeholder="...what is your STONE?"></textarea><br>
+                <div id="save-delete-div">
+                    <div id="save-div"></div>
+                    <div id="delete-div"></div>
+                </div>
             </div>
-
-            <input type="submit" class="butt" id="submit-btn" value="Log">
+                <input type="submit" class="butt" id="submit-btn" value="Log">
         </form>
         `
+        const dateP = document.getElementById('date')
+        dateP.innerText = `Today is ${TODAY}`
+
         const entryForm = document.getElementById('entry-form')
 
         entryForm.addEventListener('submit', (e) => postEntry(e))
@@ -225,13 +240,18 @@ document.addEventListener('DOMContentLoaded', (e) => {
         })
         .then(res => res.json())
         .then((entry) => {
-            let ul = document.getElementById('reflectionsUl')
-            let newEntryLi = document.createElement('li')
-            newEntryLi.id = entry.id
-            newEntryLi.innerText = `${entry.date}`
-            ul.prepend(newEntryLi)
-            newEntryLi.addEventListener('click', (e) => showEntry(e))
+            // let splitDate = entry.date.split('-')
+            // let newDate = `${splitDate[1]}.${splitDate[2]}.${splitDate[0]}`
+            // let ul = document.getElementById('reflectionsUl')
+            // let newEntryLi = document.createElement('li')
+            // newEntryLi.id = entry.id
+            // newEntryLi.innerText = `${newDate}`
+            // newEntryLi.addEventListener('click', (e) => showEntry(e))
+            USER.entries.push(entry)
+            drawEntriesList()
+            // ul.prepend(newEntryLi)
         })
+        // .catch((err) => errorPosting(err))
         const entryForm = document.getElementById('entry-form')
         entryForm.reset()
     }
@@ -251,9 +271,22 @@ document.addEventListener('DOMContentLoaded', (e) => {
         const ul = document.createElement('ul')
         ul.id = 'reflectionsUl'
 
-        for(entry of USER.entries){
+        const sortedEntries = USER.entries.sort((a, b) => {
+            if(a.date < b.date){
+                return -1
+            }
+            if(a.date < b.date){
+                return 1
+            }
+            return 0
+        })
+        for(entry of sortedEntries){
+
+            let splitDate = entry.date.split('-')
+            let newDate = `${splitDate[1]}.${splitDate[2]}.${splitDate[0]}`
+            
             let entryLi = document.createElement('li')
-            entryLi.innerText = `${entry.date}`
+            entryLi.innerText = newDate
             entryLi.id = entry.id
             entryLi.className = 'li'
             
@@ -268,36 +301,45 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     function showEntry(e){
         
-        let formContainer = document.getElementById('form-container')
         let entryId = e.target.id
-      
+        console.log(entryId)
+        
         fetch(ENTRIES_URL + `/${entryId}`)
         .then(res => res.json())
         .then(entry => {
             const entryForm = document.getElementById('entry-form')
             const logBtn = document.getElementById('submit-btn')
-            logBtn.hidden = "true"
+            logBtn.hidden = 'true'
+            const saveDiv = document.getElementById('save-div')
+            const deleteDiv = document.getElementById('delete-div')
+            const saveDeleteDiv = document.getElementById('save-delete-div')
 
-            entryForm.dataset.entryId = entryId
+            // entryForm.dataset.entryId = entryId
             entryForm.date.value = entry.date
             entryForm.feather.value = entry.feather
             entryForm.stone.value = entry.stone
 
             if(!document.getElementById('save-btn')){
+                
                 const saveBtn = document.createElement('button')
                 saveBtn.id = 'save-btn'
+                saveBtn.setAttribute('name', entryId)
                 saveBtn.className = 'butt'
                 saveBtn.innerText = 'Save'
                 
                 const deleteBtn = document.createElement('button')
                 deleteBtn.id = 'delete-btn'
+                deleteBtn.setAttribute('name', entryId)
                 deleteBtn.className = 'butt'
                 deleteBtn.innerText = 'Delete'
                 
                 saveBtn.addEventListener('click', (e) => saveEdit(e))
                 deleteBtn.addEventListener('click', (e) => deleteEntry(e))
                 
-                entryForm.append(saveBtn, deleteBtn)
+                saveDiv.appendChild(saveBtn)
+                deleteDiv.appendChild(deleteBtn)
+                saveDeleteDiv.append(saveDiv, deleteDiv)
+                entryForm.append(saveDeleteDiv)
             }
             
         })
@@ -306,11 +348,11 @@ document.addEventListener('DOMContentLoaded', (e) => {
     function saveEdit(e){
 
         e.preventDefault()
-        const entryId = e.target.parentElement.dataset.entryId
+        const entryId = parseInt(e.target.name)
 
-        const date = e.target.parentElement.date.value
-        const feather = e.target.parentElement.feather.value
-        const stone = e.target.parentElement.stone.value
+        const date = e.target.parentElement.parentElement.parentElement.date.value
+        const feather = e.target.parentElement.parentElement.parentElement.feather.value
+        const stone = e.target.parentElement.parentElement.parentElement.stone.value
         const saveBtn = document.getElementById('save-btn')
         const deleteBtn = document.getElementById('delete-btn')
 
@@ -328,10 +370,13 @@ document.addEventListener('DOMContentLoaded', (e) => {
         })
         .then(res => res.json())
         .then((entry) => {
+            let splitDate = entry.date.split('-')
+            let newDate = `${splitDate[1]}.${splitDate[2]}.${splitDate[0]}`
             let ul = document.getElementById('reflectionsUl')
             let li = document.getElementById(entryId)
-            li.innerText = `${entry.date}`
+            li.innerText = `${newDate}`
         })
+        // .catch((err) => errorPosting(err))
 
         const entryForm = document.getElementById('entry-form')
         entryForm.reset()
@@ -340,12 +385,10 @@ document.addEventListener('DOMContentLoaded', (e) => {
         const logBtn = document.getElementById('submit-btn')
         logBtn.hidden = false
     }
-    
-    function deleteEntry(e){
 
+    function deleteEntry(e){
         e.preventDefault()
-        // deletes from the DB, but does not update DOM list properly.
-        const entryId = e.target.parentElement.dataset.entryId
+        const entryId = parseInt(e.target.name)
 
         fetch(ENTRIES_URL + `/${entryId}`, {
             method: 'DELETE'
@@ -364,25 +407,30 @@ document.addEventListener('DOMContentLoaded', (e) => {
             const logBtn = document.getElementById('submit-btn')
             logBtn.hidden = false             
         })
+        // .catch((err) => errorPosting(err))
     }
+
     function clearForm(){
         const entryForm = document.getElementById('entry-form')
         entryForm.reset()
         const saveBtn = document.getElementById('save-btn')
-        saveBtn.remove()
+        if(saveBtn){
+            saveBtn.remove()
+        }
         const deleteBtn = document.getElementById('delete-btn')
-        deleteBtn.remove()
+        if(deleteBtn){
+            deleteBtn.remove()
+        }
         const logBtn = document.getElementById('submit-btn')
         logBtn.hidden = false  
     }
 
+    // function errorPosting(err){
+    //     console.log(err.message)
+    //     const errorP = document.getElementById('errors')
+    //     errorP.innerText = err.message
+    // }
 
 })
-
-
-
-
-
-
 
 
