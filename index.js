@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     }
 
     function showEntry(e){
-        
+        clearForm()
         let entryId = e.target.id
         console.log(entryId)
         
@@ -304,6 +304,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             const entryForm = document.getElementById('entry-form')
             const logBtn = document.getElementById('submit-btn')
             logBtn.hidden = 'true'
+
             const saveDiv = document.getElementById('save-div')
             const deleteDiv = document.getElementById('delete-div')
             const saveDeleteDiv = document.getElementById('save-delete-div')
@@ -313,7 +314,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
             entryForm.stone.value = entry.stone
 
             if(!document.getElementById('save-btn')){
-                
                 const saveBtn = document.createElement('button')
                 saveBtn.id = 'save-btn'
                 saveBtn.setAttribute('name', entryId)
@@ -325,6 +325,9 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 deleteBtn.setAttribute('name', entryId)
                 deleteBtn.className = 'butt'
                 deleteBtn.innerText = 'Delete'
+                
+                saveBtn.removeEventListener('click', saveEdit)
+                deleteBtn.removeEventListener('click', deleteEntry)
                 
                 saveBtn.addEventListener('click', saveEdit)
                 deleteBtn.addEventListener('click', deleteEntry)
@@ -345,6 +348,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         const stone = e.target.parentElement.parentElement.parentElement.stone.value
         const saveBtn = document.getElementById('save-btn')
         const deleteBtn = document.getElementById('delete-btn')
+        console.log(entryId)
 
         fetch(ENTRIES_URL + `/${entryId}`, {
             method:'PATCH', 
@@ -359,8 +363,10 @@ document.addEventListener('DOMContentLoaded', (e) => {
         })
         .then(res => res.json())
         .then((entry) => {
-            let ul = document.getElementById('reflectionsUl')
-            let li = document.getElementById(entryId)
+            // let ul = document.getElementById('reflectionsUl')
+            // let li = document.getElementById(entryId)
+            
+            drawEntriesList()
         })
 
         const entryForm = document.getElementById('entry-form')
@@ -405,7 +411,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             dateInput.disabled = false
 
             console.log(USER.entries)
-            const toDelete = USER.entries.find(entry=>entry.id==entryId)
+            const toDelete = USER.entries.find(entry=>{entry.id==entryId})
             USER.entries.splice(USER.entries.indexOf(toDelete), 1)
 
         })
