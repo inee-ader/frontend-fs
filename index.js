@@ -240,18 +240,9 @@ document.addEventListener('DOMContentLoaded', (e) => {
         })
         .then(res => res.json())
         .then((entry) => {
-            // let splitDate = entry.date.split('-')
-            // let newDate = `${splitDate[1]}.${splitDate[2]}.${splitDate[0]}`
-            // let ul = document.getElementById('reflectionsUl')
-            // let newEntryLi = document.createElement('li')
-            // newEntryLi.id = entry.id
-            // newEntryLi.innerText = `${newDate}`
-            // newEntryLi.addEventListener('click', (e) => showEntry(e))
             USER.entries.push(entry)
             drawEntriesList()
-            // ul.prepend(newEntryLi)
         })
-        // .catch((err) => errorPosting(err))
         const entryForm = document.getElementById('entry-form')
         entryForm.reset()
     }
@@ -281,9 +272,9 @@ document.addEventListener('DOMContentLoaded', (e) => {
             return 0
         })
         for(entry of sortedEntries){
-
-            let splitDate = entry.date.split('-')
-            let newDate = `${splitDate[1]}.${splitDate[2]}.${splitDate[0]}`
+            
+            let drawDate = entry.date.split('-')
+            let newDate = `${drawDate[1]}.${drawDate[2]}.${drawDate[0]}`
             
             let entryLi = document.createElement('li')
             entryLi.innerText = newDate
@@ -304,6 +295,9 @@ document.addEventListener('DOMContentLoaded', (e) => {
         let entryId = e.target.id
         console.log(entryId)
         
+        const dateInput = document.getElementById('date-input')
+        dateInput.disabled = true
+
         fetch(ENTRIES_URL + `/${entryId}`)
         .then(res => res.json())
         .then(entry => {
@@ -314,7 +308,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
             const deleteDiv = document.getElementById('delete-div')
             const saveDeleteDiv = document.getElementById('save-delete-div')
 
-            // entryForm.dataset.entryId = entryId
             entryForm.date.value = entry.date
             entryForm.feather.value = entry.feather
             entryForm.stone.value = entry.stone
@@ -333,15 +326,14 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 deleteBtn.className = 'butt'
                 deleteBtn.innerText = 'Delete'
                 
-                saveBtn.addEventListener('click', (e) => saveEdit(e))
-                deleteBtn.addEventListener('click', (e) => deleteEntry(e))
-                
+                saveBtn.addEventListener('click', saveEdit)
+                deleteBtn.addEventListener('click', deleteEntry)
+              
                 saveDiv.appendChild(saveBtn)
                 deleteDiv.appendChild(deleteBtn)
                 saveDeleteDiv.append(saveDiv, deleteDiv)
                 entryForm.append(saveDeleteDiv)
             }
-            
         })
     }
 
@@ -349,8 +341,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
         e.preventDefault()
         const entryId = parseInt(e.target.name)
-
-        const date = e.target.parentElement.parentElement.parentElement.date.value
         const feather = e.target.parentElement.parentElement.parentElement.feather.value
         const stone = e.target.parentElement.parentElement.parentElement.stone.value
         const saveBtn = document.getElementById('save-btn')
@@ -363,20 +353,15 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 'Accept':'application/json'
             }, 
             body: JSON.stringify({
-                date: date, 
                 feather: feather, 
                 stone: stone
             })
         })
         .then(res => res.json())
         .then((entry) => {
-            let splitDate = entry.date.split('-')
-            let newDate = `${splitDate[1]}.${splitDate[2]}.${splitDate[0]}`
             let ul = document.getElementById('reflectionsUl')
             let li = document.getElementById(entryId)
-            li.innerText = `${newDate}`
         })
-        // .catch((err) => errorPosting(err))
 
         const entryForm = document.getElementById('entry-form')
         entryForm.reset()
@@ -388,29 +373,49 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     function deleteEntry(e){
         e.preventDefault()
+        
         const entryId = parseInt(e.target.name)
 
         fetch(ENTRIES_URL + `/${entryId}`, {
             method: 'DELETE'
         })
         .then(() => {
+
+            console.log(`${entryId} has been deleted!`)
             const li = document.getElementById(entryId)
             li.remove()
             const entryForm = document.getElementById('entry-form')
             entryForm.reset()
+
             const saveBtn = document.getElementById('save-btn')
             saveBtn.className = 'butt'
+            saveBtn.removeEventListener('click', saveEdit)
+
             const deleteBtn = document.getElementById('delete-btn')
             deleteBtn.className = 'butt'
+            deleteBtn.removeEventListener('click', deleteEntry)
+            
             saveBtn.remove()
             deleteBtn.remove()
+
             const logBtn = document.getElementById('submit-btn')
-            logBtn.hidden = false             
+            logBtn.hidden = false 
+
+            const dateInput = document.getElementById('date-input')
+            dateInput.disabled = false
+
+            console.log(USER.entries)
+            const toDelete = USER.entries.find(entry=>entry.id==entryId)
+            USER.entries.splice(USER.entries.indexOf(toDelete), 1)
+
         })
-        // .catch((err) => errorPosting(err))
     }
 
     function clearForm(){
+
+        const dateInput = document.getElementById('date-input')
+        dateInput.disabled = false
+
         const entryForm = document.getElementById('entry-form')
         entryForm.reset()
         const saveBtn = document.getElementById('save-btn')
@@ -424,12 +429,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
         const logBtn = document.getElementById('submit-btn')
         logBtn.hidden = false  
     }
-
-    // function errorPosting(err){
-    //     console.log(err.message)
-    //     const errorP = document.getElementById('errors')
-    //     errorP.innerText = err.message
-    // }
 
 })
 

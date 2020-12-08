@@ -17,7 +17,7 @@ p.foot{
 p#date{
     font-family: 'Almendra Display', cursive;
     color: white;
-    font-size: 22px;
+    font-size: 25px;
     margin: 5px;
 }
 p#greeting{
@@ -77,6 +77,9 @@ input{
     border: 1px solid black;
 }
 #date-input{
+    background-color: rgb(226, 245, 197);
+    border-radius: 5px;
+    cursor: pointer;
     font-family: 'Source Sans Pro', sans-serif; 
     border: 1px solid rgb(255, 255, 255);
     margin-bottom: 20px;
@@ -172,7 +175,7 @@ h1{
 h3{
     font-family: 'Almendra Display', cursive;
     color: white;
-    font-size: 22px;
+    font-size: 25px;
     margin: 5px;
 }
 #clear-form-btn{
