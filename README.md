@@ -6,7 +6,7 @@ THIS IS THE FRONT-END PROGRAM; here is a link to the back-end: https://github.co
 
 ## DESCRIPTION
 YOUTUBE
-https://www.youtube.com/watch?v=xvJbh2iKgVw&feature=emb_logo&ab_channel=IneeAder
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xvJbh2iKgVw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 This was a solo-project for Phase 3 of Flatiron School Software Engineering program; cohort start date October 5th, 2020. 
 
