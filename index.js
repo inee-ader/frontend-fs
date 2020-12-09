@@ -363,9 +363,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         })
         .then(res => res.json())
         .then((entry) => {
-            // let ul = document.getElementById('reflectionsUl')
-            // let li = document.getElementById(entryId)
-            
+       
             drawEntriesList()
         })
 
