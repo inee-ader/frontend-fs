@@ -51,7 +51,8 @@ textarea{
     width: 250px;
     height: 150px;
     background-color: rgb(226, 245, 197);
-    font-family: 'Source Sans Pro', sans-serif;    font-size: 15px;   
+    font-family: 'Source Sans Pro', sans-serif;    
+    font-size: 15px;   
     resize: none;
     outline: none;
     margin-left: 15px;
